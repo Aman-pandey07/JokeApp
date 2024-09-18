@@ -1,10 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.kotlin.serialization)
-    id("kotlinx-serialization")
+
+
 }
 
 android {
@@ -34,11 +32,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         buildConfig = true
@@ -52,11 +50,12 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    kotlinOptions {
+        jvmTarget = "17"
+    }
 }
 
-composeCompiler{
-    enableStrongSkippingMode= true
-}
+
 
 dependencies {
 
@@ -76,49 +75,32 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.lifecycle.runtime.compose)
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.coil.compose)
 
-    implementation(platform(libs.androidx.compose.bom))
-    implementation (libs.ui)
-    implementation(libs.material3)
-    implementation(libs.ui.tooling.preview)
-    debugImplementation (libs.ui.tooling)
-
-// Retrofit for network requests
-    implementation (libs.retrofit)
-    implementation (libs.converter.gson)
 
 // Lifecycle for Jetpack Compose
     implementation (libs.androidx.lifecycle.runtime.ktx)
     implementation (libs.androidx.activity.compose)
 
+    // Jetpack Compose
+    implementation( platform(libs.androidx.compose.bom.v20240901))
+    implementation(libs.ui)
+    implementation (libs.material3)
+    implementation (libs.ui.tooling.preview)
+    debugImplementation (libs.ui.tooling)
+
+// Lifecycle for Jetpack Compose
+    implementation (libs.androidx.lifecycle.runtime.ktx.v285)
+    implementation (libs.androidx.activity.compose)
+
+// Retrofit for network requests
+    implementation(libs.retrofit)
+    implementation (libs.converter.gson)
+
 // Coroutines for background processing
     implementation (libs.kotlinx.coroutines.core)
     implementation (libs.kotlinx.coroutines.android)
 
+    implementation (libs.androidx.lifecycle.viewmodel.compose)
+    implementation (libs.androidx.lifecycle.viewmodel.ktx)
 
-
-
-
-
-
-
-
-    // KotlinX Serialization
-    implementation(libs.kotlinx.serialization.json)
-
-    // Retrofit
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-    implementation(libs.converter.scalars)
-    implementation(libs.retrofit2.kotlinx.serialization.converter)
-    implementation(libs.okhttp)
-
-
-
-    //module
-    implementation(libs.bundles.networking)
 }
