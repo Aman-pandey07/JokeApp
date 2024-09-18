@@ -2,9 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.dagger.hilt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
+    id("kotlinx-serialization")
 }
 
 android {
@@ -81,21 +81,31 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.coil.compose)
 
-    // Room
-    ksp(libs.androidx.room.compiler)
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
-    implementation(libs.androidx.room.paging)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation (libs.ui)
+    implementation(libs.material3)
+    implementation(libs.ui.tooling.preview)
+    debugImplementation (libs.ui.tooling)
 
-    //Splash Screen
-    implementation(libs.androidx.core.splashscreen)
+// Retrofit for network requests
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson)
 
-    //Cloudy for blurring effect
-    implementation(libs.cloudy)
+// Lifecycle for Jetpack Compose
+    implementation (libs.androidx.lifecycle.runtime.ktx)
+    implementation (libs.androidx.activity.compose)
 
-    //Paging
-    implementation(libs.androidx.paging.runtime.ktx)
-    implementation(libs.androidx.paging.compose)
+// Coroutines for background processing
+    implementation (libs.kotlinx.coroutines.core)
+    implementation (libs.kotlinx.coroutines.android)
+
+
+
+
+
+
+
+
 
     // KotlinX Serialization
     implementation(libs.kotlinx.serialization.json)
@@ -107,9 +117,8 @@ dependencies {
     implementation(libs.retrofit2.kotlinx.serialization.converter)
     implementation(libs.okhttp)
 
-    //Dagger hilt
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
-    ksp(libs.androidx.hilt.compiler)
-    implementation(libs.androidx.hilt.navigation.compose)
+
+
+    //module
+    implementation(libs.bundles.networking)
 }
