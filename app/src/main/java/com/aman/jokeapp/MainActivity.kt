@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import com.aman.jokeapp.screens.JokeViewModel
 import com.aman.jokeapp.ui.theme.JokeAppTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.aman.jokeapp.screens.JokeScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,57 +48,4 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun JokeScreen(jokeViewModel: JokeViewModel = viewModel()) {
-    val joke by jokeViewModel.joke.collectAsState()
-    var isPunchlineVisible by remember { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        jokeViewModel.fetchJoke()
-    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        if (joke != null) {
-            Text(
-                text = joke!!.setup,
-                style = MaterialTheme.typography.titleLarge,
-                textAlign = TextAlign.Center
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = { isPunchlineVisible = !isPunchlineVisible }) {
-                Text(text = if (isPunchlineVisible) "Hide Punchline" else "Show Punchline")
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            AnimatedVisibility(
-                visible = isPunchlineVisible,
-                enter = fadeIn(),
-                exit = fadeOut()
-            ) {
-                Text(
-                    text = joke!!.punchline,
-                    style = MaterialTheme.typography.bodyLarge,
-                    textAlign = TextAlign.Center,
-                    color = Color.Gray
-                )
-            }
-        } else {
-            CircularProgressIndicator()
-        }
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Button(onClick = {
-            jokeViewModel.fetchJoke()
-            isPunchlineVisible = false
-        }) {
-            Text(text = "Fetch Another Joke")
-        }
-    }
-}
 
