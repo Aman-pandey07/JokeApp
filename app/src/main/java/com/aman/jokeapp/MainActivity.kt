@@ -4,6 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,8 +22,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 
 import androidx.compose.ui.unit.dp
 import com.aman.jokeapp.screens.JokeViewModel
@@ -42,6 +50,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun JokeScreen(jokeViewModel: JokeViewModel = viewModel()) {
     val joke by jokeViewModel.joke.collectAsState()
+    var isPunchlineVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         jokeViewModel.fetchJoke()
@@ -55,16 +64,38 @@ fun JokeScreen(jokeViewModel: JokeViewModel = viewModel()) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (joke != null) {
-            Text(text = joke!!.setup, style = MaterialTheme.typography.titleLarge)
+            Text(
+                text = joke!!.setup,
+                style = MaterialTheme.typography.titleLarge,
+                textAlign = TextAlign.Center
+            )
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = joke!!.punchline, style = MaterialTheme.typography.bodyLarge)
+            Button(onClick = { isPunchlineVisible = !isPunchlineVisible }) {
+                Text(text = if (isPunchlineVisible) "Hide Punchline" else "Show Punchline")
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            AnimatedVisibility(
+                visible = isPunchlineVisible,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                Text(
+                    text = joke!!.punchline,
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Center,
+                    color = Color.Gray
+                )
+            }
         } else {
             CircularProgressIndicator()
         }
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        Button(onClick = { jokeViewModel.fetchJoke() }) {
+        Button(onClick = {
+            jokeViewModel.fetchJoke()
+            isPunchlineVisible = false
+        }) {
             Text(text = "Fetch Another Joke")
         }
     }
